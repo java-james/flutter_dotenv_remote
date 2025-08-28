@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_dotenv_remote_extension/flutter_dotenv_remote_extension.dart';
+import 'package:flutter_dotenv_remote/flutter_dotenv_remote.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Load remote env before running the app
-  try {
-    await dotenv.loadRemote(configId: '699fb309-6c5c-44fb-8612-b6a8dda08296');
-  } catch (e) {
-    print('Failed to load remote env: $e');
-  }
+  await dotenv.loadRemote(configId: '699fb309-6c5c-44fb-8612-b6a8dda08296');
 
   runApp(const MyApp());
 }

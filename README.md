@@ -1,107 +1,102 @@
-# flutter_dotenv_remote_extension
+# flutter_dotenv_remote
 
-Easily load environment variables from a remote Supabase table into your Flutter app using the familiar `flutter_dotenv` API. This package provides a drop-in extension for `flutter_dotenv` that supports remote config loading, offline caching, and flexible error handling.
+Use the hosted portal at https://www.flutterdotenv.com to create, manage and publish environment configs, then load them in your Flutter app by ID.
 
-## Features
+This package provides an extension on `flutter_dotenv` that fetches a JSON-based environment from a Supabase table, loads it into `dotenv`, and caches the last successful result for offline fallback.
 
-- Load environment variables from a Supabase table by config ID
-- Automatic caching for offline use
-- Fallback to last cached config if online fetch fails (optional)
-- Custom error/fallback handler if both online and cache loading fail
-- Works seamlessly with `flutter_dotenv`
+Why use the portal
+------------------
 
-## Getting started
+- Fast setup: sign up, create a config, copy the config ID and use it in your app.
+- Centralized management: edit environment sets in a web UI and have client apps pick up latest changes by ID.
+- Optional paid features & team management (coming soon).
 
-Add the following to your `pubspec.yaml`:
+Quick start (recommended)
+-------------------------
+
+1. Sign up at https://www.flutterdotenv.com and create a config. Copy the generated config ID.
+2. Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_dotenv_remote_extension: ^0.0.1
+  flutter_dotenv_remote: ^0.0.1
+  flutter_dotenv: ^6.0.0
 ```
 
-All required dependencies (`flutter_dotenv`, `supabase_flutter`, `shared_preferences`) are handled automatically.
-
-## Usage
-
-### Basic usage (default hosted Supabase instance)
+3. Load the config at app startup:
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_dotenv_remote_extension/flutter_dotenv_remote_extension.dart';
+import 'package:flutter_dotenv_remote/flutter_dotenv_remote.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.loadRemote(
-    configId: 'YOUR_CONFIG_ID', // e.g. '699fb309-6c5c-44fb-8612-b6a8dda08296'
-    useCacheOnFailure: true, // fallback to cache if offline
+    configId: '699fb309-6c5c-44fb-8612-b6a8dda08296',
+    useCacheOnFailure: true,
     onLoadFailure: () {
-      // Show error UI or log
-      print('Failed to load config from both remote and cache');
+      // optional: UI fallback or logging
+      debugPrint('Failed to load config from remote and cache');
     },
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 ```
 
-### Display loaded environment variables
+The library defaults to the Supabase instance used by the portal; you do not need to provide keys when consuming portal configs.
+
+Show the loaded variables
+-------------------------
+
+Use `dotenv.env` to access the loaded key/value pairs. Example UI:
 
 ```dart
-final envVars = dotenv.env.entries.toList();
-return ListView.builder(
-  itemCount: envVars.length,
-  itemBuilder: (context, index) {
-    final entry = envVars[index];
-    return ListTile(
-      title: Text(entry.key),
-      subtitle: Text(entry.value),
-    );
-  },
+final entries = dotenv.env.entries.toList();
+ListView.builder(
+  itemCount: entries.length,
+  itemBuilder: (_, i) => ListTile(
+    title: Text(entries[i].key),
+    subtitle: Text(entries[i].value),
+  ),
 );
 ```
 
-## Advanced usage
+Advanced / self-hosted
+----------------------
 
-### Use your own Supabase instance
-
-You can override the default Supabase URL and anon key:
+If you run your own Supabase instance you can pass `supabaseUrl` and `supabaseAnonKey`, or provide a `SupabaseClient` instance (useful for testing or advanced scenarios):
 
 ```dart
 await dotenv.loadRemote(
-  configId: 'YOUR_CONFIG_ID',
+  configId: 'your-id',
   supabaseUrl: 'https://your-project.supabase.co',
   supabaseAnonKey: 'your-anon-key',
+  // or
+  // supabaseClient: SupabaseClient(...),
 );
 ```
 
-### Custom error handling
+Caching and failure behaviour
+-----------------------------
 
-Provide an `onLoadFailure` callback to handle cases where both remote and cache loading fail:
+- On successful remote load the library caches the final dotenv string locally (SharedPreferences).
+- If a remote load fails and `useCacheOnFailure` is true, the last cached config is loaded.
+- If both remote and cache loading fail and an `onLoadFailure` callback is provided, it will be invoked so the app can handle the error.
 
-```dart
-await dotenv.loadRemote(
-  configId: 'YOUR_CONFIG_ID',
-  useCacheOnFailure: true,
-  onLoadFailure: () {
-    // Show a dialog, log, or fallback to defaults
-  },
-);
-```
+Security note
+-------------
 
-## How it works
+The portal's Supabase anon key is used solely for reading published environment configs. Do not store sensitive secrets in public configs; use appropriate server-side controls for secrets.
 
-- Loads config from Supabase table `envs` where `id = configId`
-- Parses the `environment_json` field (should be a JSON object of key-value pairs)
-- Loads the config into `flutter_dotenv` using `loadFromString`
-- Caches the last loaded config in `SharedPreferences` for offline use
+Contributing & support
+----------------------
 
-## Example
+Open an issue or submit a PR. For portal support and account/tier questions use https://www.flutterdotenv.com.
 
-See the `/example` folder for a complete Flutter app that loads and displays remote config.
+License
+-------
 
-## Additional information
-
-- [flutter_dotenv](https://pub.dev/packages/flutter_dotenv)
-
-Feel free to file issues, contribute, or reach out for support!
+This project is licensed under the terms in the repository `LICENSE` file.

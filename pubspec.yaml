@@ -1,5 +1,5 @@
-name: flutter_dotenv_remote_extension
-description: "A new Flutter package project."
+name: flutter_dotenv_remote
+description: "Load dotenv configs from the cloud (flutterdotenv.com) with offline caching and optional self-hosted Supabase support."
 version: 0.0.1
 homepage:
 
