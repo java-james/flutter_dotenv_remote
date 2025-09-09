@@ -1,5 +1,5 @@
 name: flutter_dotenv_remote
-description: "Load dotenv configs from the cloud (flutterdotenv.com) with offline caching and optional self-hosted Supabase support."
+description: "Load  dotenv config from the web into your app. With offline caching and optional self-hosted Supabase support."
 version: 0.0.1
 homepage:
 

@@ -2,7 +2,7 @@
 
 Use the hosted portal at https://www.flutterdotenv.com to create, manage and publish environment configs, then load them in your Flutter app by ID.
 
-This package provides an extension on `flutter_dotenv` that fetches a JSON-based environment from a Supabase table, loads it into `dotenv`, and caches the last successful result for offline fallback.
+This package provides an extension on `flutter_dotenv` that fetches a JSON-based environment, loads it into `dotenv`, and caches the last successful result for offline fallback.
 
 Why use the portal
 ------------------
@@ -34,6 +34,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.loadRemote(
+    // UUID from your environment entry on flutterdotenv.com
     configId: '699fb309-6c5c-44fb-8612-b6a8dda08296',
     useCacheOnFailure: true,
     onLoadFailure: () {
@@ -48,21 +49,11 @@ void main() async {
 
 The library defaults to the Supabase instance used by the portal; you do not need to provide keys when consuming portal configs.
 
-Show the loaded variables
+Use the loaded environment variables
 -------------------------
 
-Use `dotenv.env` to access the loaded key/value pairs. Example UI:
+See [Flutter Dotenv](https://pub.dev/packages/flutter_dotenv) documentation for how to use the variables in your app.
 
-```dart
-final entries = dotenv.env.entries.toList();
-ListView.builder(
-  itemCount: entries.length,
-  itemBuilder: (_, i) => ListTile(
-    title: Text(entries[i].key),
-    subtitle: Text(entries[i].value),
-  ),
-);
-```
 
 Advanced / self-hosted
 ----------------------
