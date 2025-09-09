@@ -1,7 +1,7 @@
 name: flutter_dotenv_remote
 description: "Load  dotenv config from the web into your app. With offline caching and optional self-hosted Supabase support."
 version: 0.0.1
-homepage:
+repository: https://github.com/java-james/flutter_dotenv_remote
 
 environment:
   sdk: ^3.9.0
