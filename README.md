@@ -1,6 +1,6 @@
 # flutter_dotenv_remote
 
-Use the hosted portal at https://www.flutterdotenv.com to create, manage and publish environment configs, then load them in your Flutter app by ID.
+Use the hosted portal at https://flutterdotenv.com to create, manage and publish environment configs, then load them in your Flutter app by ID.
 
 This package provides an extension on `flutter_dotenv` that fetches a JSON-based environment, loads it into `dotenv`, and caches the last successful result for offline fallback.
 
